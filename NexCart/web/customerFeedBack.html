@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Feedback | NexCart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .rating-input {
+            display: none;
+        }
+
+        .rating-label {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #d1d5db;
+            transition: color 0.2s;
+        }
+
+        .rating-input:checked~.rating-label,
+        .rating-label:hover,
+        .rating-label:hover~.rating-label {
+            color: #f59e0b;
+        }
+
+        .rating-input:checked+.rating-label {
+            color: #f59e0b;
+        }
+
+        .feedback-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feedback-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        #confirmation-toast {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #confirmation-toast.show {
+            opacity: 1;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+</head>
+
+<body class="bg-gray-50" onload="loadFeedback();">
+    <!-- Top Bar -->
+        <div class="bg-gray-900 text-white py-2 px-4 text-sm hidden md:block">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex space-x-4">
+                    <span><i class="fas fa-phone-alt mr-1"></i> +1 234 567 890</span>
+                    <span><i class="fas fa-envelope mr-1"></i> support@nexcart.com</span>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-pink-400">Track Order</a>
+                    <a href="#" class="hover:text-pink-400">Help Center</a>
+                    <div class="relative group">
+                        <button class="hover:text-pink-400 flex items-center">
+                            <i class="fas fa-globe mr-1"></i> English
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div
+                            class="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded shadow-lg hidden group-hover:block z-50">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Español</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Français</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">中文</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <a href="#" class="text-2xl font-bold text-pink-600 flex items-center">
+                            <img src="images/NexCart12.png" alt="">
+                        </a>
+                    </div>
+
+<!--                     Search Bar 
+                    <div class="hidden md:flex flex-1 mx-8">
+                        <div class="relative w-full search-box rounded-full overflow-hidden">
+                            <input type="text" placeholder="Search for products..."
+                                   class="w-full py-3 px-5 focus:outline-none">
+                            <div class="absolute inset-y-0 right-0 flex items-center">
+                                <select
+                                    class="h-full px-4 text-gray-600 bg-gray-100 border-r border-gray-300 focus:outline-none">
+                                    <option>All Categories</option>
+                                    <option>Men's Fashion</option>
+                                    <option>Women's Fashion</option>
+                                    <option>Electronics</option>
+                                    <option>Home & Garden</option>
+                                </select>
+                                <button class="bg-pink-600 text-white px-6 h-full hover:bg-pink-700">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>-->
+
+                    <!-- Icons -->
+                    <div class="flex items-center space-x-6">
+                        <a href="#" class="text-gray-700 hover:text-pink-600 relative">
+                            <i class="fas fa-heart text-xl"></i>
+                            
+                        </a>
+                        <a href="Cart.html" class="text-gray-700 hover:text-pink-600 relative">
+                            <i class="fas fa-shopping-cart text-xl"></i>
+                           
+                        </a>
+                        <a href="My-Account.html" class="text-gray-700 hover:text-pink-600">
+                            <i class="fas fa-user text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Search -->
+        <div class="md:hidden bg-white py-2 px-4 shadow-sm">
+            <div class="relative">
+                <input type="text" placeholder="Search for products..."
+                       class="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:border-pink-500">
+                <button class="absolute right-3 top-2 text-gray-500">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="bg-white shadow-sm hidden md:block">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex space-x-8">
+                        <a href="index.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Home</a>
+                        <a href="search.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Shop</a>
+                        <div class="relative group">
+                            <a href="search.html"
+                               class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium flex items-center">
+                                Categories <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </a>
+                            <div
+                                class="absolute left-0 mt-0 w-48 bg-white text-gray-800 rounded shadow-lg hidden group-hover:block z-50">
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Men's
+                                    Fashion</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Women's
+                                    Fashion</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Kids &
+                                    Babies</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100">Accessories</a>
+                            </div>
+                        </div>
+                        <a href="#" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Deals</a>
+                        <a href="search.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">New Arrivals</a>
+                        <a href="customerFeedBack" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Add FeedBack Our Service</a>
+                    </div>
+                    <div>
+                        <a href="#" class="text-pink-600 font-medium">Today's Deals <span
+                                class="bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded ml-1">HOT</span></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden bg-white py-3 px-4 flex justify-between items-center shadow-sm">
+            <button class="text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <a href="#" class="text-pink-600 font-medium">Today's Deals</a>
+            <button class="text-gray-700">
+                <i class="fas fa-filter text-xl"></i>
+            </button>
+        </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Customer Feedback</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">We value your opinion! Share your experience shopping
+                with NexCart and help us improve our services.</p>
+        </div>
+
+        <!-- Feedback Form -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden p-6 mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Share Your Feedback</h2>
+            <form id="feedbackForm" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                        <input type="text" id="name" name="name"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="John Doe" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input type="email" id="email" name="email"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="john@example.com" required>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div>
+                        <label for="myRange" class="block text-sm font-medium text-gray-700 mb-1">How likely are you to recommend us?</label>
+                        <input
+                            type="range"
+                            id="myRange"
+                            min="0"
+                            max="100"
+                            value="50"
+                            class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                            required
+                        >
+                    </div>
+                    <div class="flex items-center md:justify-center mt-4 md:mt-0">
+                        <span class="text-lg font-semibold text-indigo-600 mr-2" id="rangeValue">50</span>
+                        <span class="text-gray-700 text-base">%</span>
+                        <span class="ml-2 text-gray-500">Likelihood to recommend</span>
+                    </div>
+                </div>
+
+
+
+
+
+                <div>
+                    <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Your Feedback</label>
+                    <textarea id="message" name="message" rows="4"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Tell us about your experience..." required></textarea>
+                </div>
+
+              
+
+                <div>
+                    <button type="button"
+                            class="w-full bg-pink-600 text-white py-3 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300" onclick="customerFeedback();">
+                        Submit Feedback
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Customer Testimonials -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">What Our Customers Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="feedBackCard">
+                <!-- Testimonial 1 -->
+                <div class="feedback-card bg-white p-6 rounded-xl shadow-sm">
+                    <div class="text-gray-700 mb-4">Rate : <span>52</span>%</div>
+                    <p class="text-gray-700 mb-4">"The quality of the jeans I bought exceeded my expectations. They fit
+                        perfectly and are so comfortable. Will definitely shop here again!"</p>
+                    <div class="flex items-center">
+                        
+                        <div>
+                            <h4 class="font-medium text-gray-900">kavindu Lakshan</h4>
+                            <p class="text-sm text-gray-500">Verified Buyer</p>
+                        </div>
+                    </div>
+                </div>
+
+             
+            </div>
+        </div>
+
+        
+    </main>
+
+    <!-- Confirmation Toast -->
+    <div id="confirmation-toast"
+        class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center hidden">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>Thank you for your feedback!</span>
+    </div>
+
+    <!-- Footer -->
+   <!-- Footer -->
+        <footer class="bg-gray-900 text-white pt-12 pb-6">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                    <!-- Column 1 -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-shopping-bag mr-2"></i> NexCart
+                        </h3>
+                        <p class="text-gray-400 mb-4">Fashion for everyone at affordable prices. Quality products with fast
+                            delivery.</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-pinterest"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                            <li><a href="search.html" class="text-gray-400 hover:text-white">Shop</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Customer Service</h3>
+                        <ul class="space-y-2">
+                            <li><a href="My-Account.html" class="text-gray-400 hover:text-white">My Account</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Order Tracking</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Wishlist</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Shipping Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Returns & Refunds</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 4 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                        <ul class="space-y-2 text-gray-400">
+                            <li class="flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2"></i> 123 Fashion Street, kandy, NO 10001
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-phone-alt mr-2"></i> +1 234 567 890
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-envelope mr-2"></i> support@nexcart.com
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-clock mr-2"></i> Mon-Fri: 9AM - 6PM
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-800 pt-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 NexCart. All rights reserved.</p>
+                        <div class="flex space-x-6">
+                            <img src="https://1000logos.net/wp-content/uploads/2017/06/VISA-Logo-1992-768x432.png"
+                                 alt="Visa" class="h-6">
+                            <img src="https://th.bing.com/th/id/R.205013ad5e99aef05d6ca201a9ac3a31?rik=Z0cpX2RX%2bs5a9Q&riu=http%3a%2f%2fwww.pngall.com%2fwp-content%2fuploads%2f2016%2f07%2fMastercard-PNG.png&ehk=%2fudodjGiA%2fogzZwdrBgFCGA5rNzptgXW4WqBIIdvABg%3d&risl=&pid=ImgRaw&r=0"
+                                 alt="Mastercard" class="h-6">
+                            <img src="https://www.pngall.com/wp-content/uploads/5/PayPal-Logo-PNG-Free-Image.png"
+                                 alt="PayPal" class="h-6">
+                            <img src="https://logos-world.net/wp-content/uploads/2022/03/Apple-Pay-Logo.png" alt="Apple Pay"
+                                 class="h-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Mobile Bottom Navigation -->
+        <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50">
+            <div class="flex justify-around py-3">
+                <a href="index.html" class="flex flex-col items-center text-pink-600">
+                    <i class="fas fa-home text-xl"></i>
+                    <span class="text-xs mt-1">Home</span>
+                </a>
+                <a href="search.html" class="flex flex-col items-center text-gray-600">
+                    <i class="fas fa-search text-xl"></i>
+                    <span class="text-xs mt-1">Search</span>
+                </a>
+                <a href="Cart.html" class="flex flex-col items-center text-gray-600 relative">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span
+                        class="absolute -top-1 -right-2 bg-pink-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">5</span>
+                    <span class="text-xs mt-1">Cart</span>
+                </a>
+                <a href="My-Account.html" class="flex flex-col items-center text-gray-600">
+                    <i class="fas fa-user text-xl"></i>
+                    <span class="text-xs mt-1">Account</span>
+                </a>
+            </div>
+        </div>
+    <script>
+        document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // In a real application, you would send the form data to a server here
+            // For this example, we'll just show a confirmation message
+
+            // Show confirmation toast
+            const toast = document.getElementById('confirmation-toast');
+            toast.classList.remove('hidden');
+            toast.classList.add('show');
+
+            // Reset form
+            this.reset();
+
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.classList.add('hidden'), 500);
+            }, 3000);
+        });
+
+        // Star rating hover effect
+        const stars = document.querySelectorAll('.rating-label');
+        stars.forEach((star, index) => {
+            star.addEventListener('mouseover', () => {
+                for (let i = 0; i <= index; i++) {
+                    stars[i].style.color = '#f59e0b';
+                }
+            });
+
+            star.addEventListener('mouseout', () => {
+                const checkedStar = document.querySelector('.rating-input:checked');
+                if (checkedStar) {
+                    const checkedIndex = parseInt(checkedStar.value) - 1;
+                    for (let i = 0; i < stars.length; i++) {
+                        stars[i].style.color = i <= checkedIndex ? '#f59e0b' : '#d1d5db';
+                    }
+                } else {
+                    stars.forEach(s => s.style.color = '#d1d5db');
+                }
+            });
+        });
+
+
+        const rangeInput = document.getElementById("myRange");
+        const rangeValueDisplay = document.getElementById("rangeValue");
+
+        // Update display when the range changes
+        rangeInput.addEventListener("input", function () {
+            rangeValueDisplay.textContent = rangeInput.value;
+            // You can also use the value for other things here
+            console.log("Range value is: " + rangeInput.value);
+        });
+
+
+    </script>
+    <script src="assets/js1/customerFeedBack.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+</body>
+
+</html>

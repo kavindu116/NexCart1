@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>NexCart - Shop Clothing</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+        <style>
+            /* Custom CSS for elements that need more styling than Tailwind provides */
+            
+            :root {
+            --primary-color: oklch(59.2% 0.249 0.584) ;
+            --secondary-color: #f8f9fa;
+            --dark-color: #343a40;
+            --light-color: #ffffff;
+        }
+            
+            .price-range-slider {
+                -webkit-appearance: none;
+                width: 100%;
+                height: 6px;
+                border-radius: 5px;
+                background: #ddd;
+                outline: none;
+            }
+
+            .price-range-slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background: #3b82f6;
+                cursor: pointer;
+            }
+
+            .price-range-slider::-moz-range-thumb {
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background: #3b82f6;
+                cursor: pointer;
+            }
+
+            .color-option {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: transform 0.2s;
+            }
+
+            .color-option:hover {
+                transform: scale(1.2);
+            }
+
+            .color-option.selected {
+                outline: 2px solid #000;
+                transform: scale(1.2);
+            }
+
+            /* Animation for filter button */
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.05);
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            .filter-button:hover {
+                animation: pulse 1.5s infinite;
+            }
+
+            /* Product card hover effect */
+            .product-card {
+                transition: all 0.3s ease;
+            }
+
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            #color-options {
+                display: flex;
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                gap: 10px; /* optional spacing between items */
+            }
+
+            #color-options li {
+                padding: 8px;
+                background-color: #f0f0f0;
+                border-radius: 20px;
+            }
+             .search-box {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        </style>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+
+    <body class="bg-gray-50" onload="loadData();">
+       <!-- Header -->
+      <!-- Top Bar -->
+        <div class="bg-gray-900 text-white py-2 px-4 text-sm hidden md:block">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex space-x-4">
+                    <span><i class="fas fa-phone-alt mr-1"></i> +1 234 567 890</span>
+                    <span><i class="fas fa-envelope mr-1"></i> support@nexcart.com</span>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-pink-400">Track Order</a>
+                    <a href="#" class="hover:text-pink-400">Help Center</a>
+                    <div class="relative group">
+                        <button class="hover:text-pink-400 flex items-center">
+                            <i class="fas fa-globe mr-1"></i> English
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div
+                            class="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded shadow-lg hidden group-hover:block z-50">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Español</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Français</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">中文</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <a href="#" class="text-2xl font-bold text-pink-600 flex items-center">
+                            <img src="images/NexCart12.png" alt="">
+                        </a>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="hidden md:flex flex-1 mx-8">
+                        <div class="relative w-full search-box rounded-full overflow-hidden">
+                            <input type="text" placeholder="Search for products..."
+                                   class="w-full py-3 px-5 focus:outline-none" id="SearchText">
+                            <div class="absolute inset-y-0 right-0 flex items-center">
+                                
+                                <button class="bg-pink-600 text-white px-6 h-full hover:bg-pink-700" onclick="Search();">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Icons -->
+                    <div class="flex items-center space-x-6">
+                        <a href="#" class="text-gray-700 hover:text-pink-600 relative">
+                            <i class="fas fa-heart text-xl"></i>
+                            
+                        </a>
+                        <a href="Cart.html" class="text-gray-700 hover:text-pink-600 relative">
+                            <i class="fas fa-shopping-cart text-xl"></i>
+                           
+                        </a>
+                        <a href="My-Account.html" class="text-gray-700 hover:text-pink-600">
+                            <i class="fas fa-user text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Search -->
+        <div class="md:hidden bg-white py-2 px-4 shadow-sm">
+            <div class="relative">
+                <input type="text" placeholder="Search for products..."
+                       class="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:border-pink-500">
+                <button class="absolute right-3 top-2 text-gray-500">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="bg-white shadow-sm hidden md:block">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex space-x-8">
+                        <a href="index.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Home</a>
+                        <a href="search.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Shop</a>
+                        <div class="relative group">
+                            <a href="search.html"
+                               class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium flex items-center">
+                                Categories <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </a>
+                            <div
+                                class="absolute left-0 mt-0 w-48 bg-white text-gray-800 rounded shadow-lg hidden group-hover:block z-50">
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Men's
+                                    Fashion</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Women's
+                                    Fashion</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Kids &
+                                    Babies</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100">Accessories</a>
+                            </div>
+                        </div>
+                        <a href="#" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Deals</a>
+                        <a href="search.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">New Arrivals</a>
+                        <a href="#" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Add FeedBack Our Service</a>
+                    </div>
+                    <div>
+                        <a href="#" class="text-pink-600 font-medium">Today's Deals <span
+                                class="bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded ml-1">HOT</span></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden bg-white py-3 px-4 flex justify-between items-center shadow-sm">
+            <button class="text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <a href="#" class="text-pink-600 font-medium">Today's Deals</a>
+            <button class="text-gray-700">
+                <i class="fas fa-filter text-xl"></i>
+            </button>
+        </div>
+
+
+        <!-- Main Content -->
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Filters Sidebar -->
+                <aside class="w-full md:w-64 bg-white p-6 rounded-lg shadow-sm h-fit sticky top-4">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-semibold">Filters</h2>
+                        <button class="text-blue-600 text-sm">Clear All</button>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="mb-6">
+                        <h3 class="font-medium mb-3 flex justify-between items-center cursor-pointer " onclick="toggleFilter(this)">
+                            <span>Category</span>
+                            <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                        </h3>
+                        <div class="space-y-2 hidden">
+                            <ul id="category-options">
+                                <li id="category-li">
+                                    <input type="radio" id="category" class="mr-2 rounded text-blue-600" name="category">
+                                    <label for="category" id="category-a"></label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                     <div class="mb-6">
+                        <h3 class="font-medium mb-3 flex justify-between items-center cursor-pointer" onclick="toggleFilter(this)">
+                            <span>Sub Category</span>
+                            <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                        </h3>
+                        <div class="space-y-2 hidden">
+                            <ul id="subCategory-options">
+                                <li id="subCategory-li">
+                                    <input type="radio" id="subCategory" class="mr-2 rounded text-blue-600" name="sub-category">
+                                    <label for="subCategory" id="subCategory-a"></label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h3 class="font-medium mb-3 flex justify-between items-center cursor-pointer" onclick="toggleFilter(this)">
+                            <span>Brand</span>
+                            <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                        </h3>
+                        <div class="space-y-2 hidden">
+                            <ul id="brand-options">
+                                <li id="brand-li">
+                                    <input type="radio" id="brand" class="mr-2 rounded text-blue-600" name="brand">
+                                    <label for="brand" id="brand-a"></label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Material Filter -->
+                    <div class="mb-6">
+                        <h3 class="font-medium mb-3 flex justify-between items-center cursor-pointer" onclick="toggleFilter(this)">
+                            <span>Metirial</span>
+                            <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                        </h3>
+                        <div class="space-y-2 hidden">
+                            <ul id="metirial-options">
+                                <li id="metirial-li">
+                                    <input type="radio" id="metirial" class="mr-2 rounded text-blue-600" name="metirial">
+                                    <label for="metirial" id="metirial-a"></label>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+
+                    <!-- Price Range Filter -->
+                    <div class="mb-6">
+                        <h3 class="font-medium mb-3">Price Range</h3>
+                        <div id="slider-range"></div>
+                        <div class="mb-2">
+                            <input type="range"  max="50000" value="25000" class="price-range-slider" id="priceRange">
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Rs:0</span>
+                            <span id="maxprice">25000</span>
+                            <span>Rs:50000</span>
+                        </div>
+                    </div>
+
+                    <!-- Size Filter -->
+                    <div class="mb-6">
+                        <h3 class="font-medium mb-3 flex justify-between items-center cursor-pointer" onclick="toggleFilter(this)">
+                            <span>Size</span>
+                            <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                        </h3>
+                        <ul id="size-options" class="hidden">
+                            <li id="size-li">
+                                <input type="radio" id="size" class="mr-2 rounded text-blue-600" name="size">
+                                <label for="size" id="size-a"></label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Color Filter -->
+                    <div class="mb-6">
+                        <h3 class="font-medium mb-3 flex justify-between items-center cursor-pointer" onclick="toggleFilter(this)">
+                            <span>Color</span>
+                            <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                        </h3>
+
+                        <div class="hidden">
+                            <ul id="color-options" class="flex flex-col items-center space-y-1">
+                                <li id="color-li"  class="">
+                                    <a><div class="color-option bg-red-500 selected "   id="color-a" onclick="selectColor(this)" ></div></a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+
+                    </div>
+
+
+
+
+                    <button
+                        class="filter-button w-full bg-pink-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300 flex items-center justify-center" onclick="ApplyFiters(0);">
+                        <i class="fas fa-filter mr-2"></i> Apply Filters
+                    </button>
+                </aside>
+
+                <!-- Products Section -->
+                <main class="flex-1">
+                    <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div class="mb-4 md:mb-0">
+                                <h2 class="text-xl font-semibold">Clothing Collection</h2>
+                                <p class="text-gray-500 text-sm">Showing 1-8 of <span id="all-item-count"></span> products</p>
+                            </div> 
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center">
+                                    <span class="mr-2 text-sm text-gray-600">Sort by:</span>
+                                    <select class="border rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" id="st-sort">
+                                        <option>Featured</option>
+                                        <option>Price: Low to High</option>
+                                        <option>Price: High to Low</option>
+                                        <option>Sort by Oldest</option>
+                                        <option>Sort by Name</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+
+
+
+                        </div>
+
+                        <!-- Products Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8" id="productCart">
+                            <!-- Product Card 1 -->
+                            <div class="product-card bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+                                <div class="relative">
+                                    <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Product"
+                                         class="w-full h-64 object-cover">
+                                    <div class="absolute top-2 right-2">
+                                        <button
+                                            class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-500 hover:text-red-500 shadow-md">
+                                            <i class="far fa-heart"></i>
+                                        </button>
+                                    </div>
+                                    <div class="absolute bottom-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">New
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h3 class="font-medium text-gray-900">Men's Slim Fit T-Shirt</h3>
+
+                                    </div>
+
+
+                                    <button
+                                        class="w-full bg-pink-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition duration-300 flex items-center justify-center">
+                                        <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end" id="st-pagination-container">
+                            <a href="#" class="btn btn-md btn-dark rounded  " id="st-pagination-button">Prev</a>
+                        </div>
+                </main>
+            </div>
+        </div>
+
+         <!-- Footer -->
+        <footer class="bg-gray-900 text-white pt-12 pb-6">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                    <!-- Column 1 -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-shopping-bag mr-2"></i> NexCart
+                        </h3>
+                        <p class="text-gray-400 mb-4">Fashion for everyone at affordable prices. Quality products with fast
+                            delivery.</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-pinterest"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                            <li><a href="search.html" class="text-gray-400 hover:text-white">Shop</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Customer Service</h3>
+                        <ul class="space-y-2">
+                            <li><a href="My-Account.html" class="text-gray-400 hover:text-white">My Account</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Order Tracking</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Wishlist</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Shipping Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Returns & Refunds</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 4 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                        <ul class="space-y-2 text-gray-400">
+                            <li class="flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2"></i> 123 Fashion Street, kandy, NO 10001
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-phone-alt mr-2"></i> +1 234 567 890
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-envelope mr-2"></i> support@nexcart.com
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-clock mr-2"></i> Mon-Fri: 9AM - 6PM
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-800 pt-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 NexCart. All rights reserved.</p>
+                        <div class="flex space-x-6">
+                            <img src="https://1000logos.net/wp-content/uploads/2017/06/VISA-Logo-1992-768x432.png"
+                                 alt="Visa" class="h-6">
+                            <img src="https://th.bing.com/th/id/R.205013ad5e99aef05d6ca201a9ac3a31?rik=Z0cpX2RX%2bs5a9Q&riu=http%3a%2f%2fwww.pngall.com%2fwp-content%2fuploads%2f2016%2f07%2fMastercard-PNG.png&ehk=%2fudodjGiA%2fogzZwdrBgFCGA5rNzptgXW4WqBIIdvABg%3d&risl=&pid=ImgRaw&r=0"
+                                 alt="Mastercard" class="h-6">
+                            <img src="https://www.pngall.com/wp-content/uploads/5/PayPal-Logo-PNG-Free-Image.png"
+                                 alt="PayPal" class="h-6">
+                            <img src="https://logos-world.net/wp-content/uploads/2022/03/Apple-Pay-Logo.png" alt="Apple Pay"
+                                 class="h-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Mobile Bottom Navigation -->
+        <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50">
+            <div class="flex justify-around py-3">
+                <a href="index.html" class="flex flex-col items-center text-pink-600">
+                    <i class="fas fa-home text-xl"></i>
+                    <span class="text-xs mt-1">Home</span>
+                </a>
+                <a href="search.html" class="flex flex-col items-center text-gray-600">
+                    <i class="fas fa-search text-xl"></i>
+                    <span class="text-xs mt-1">Search</span>
+                </a>
+                <a href="Cart.html" class="flex flex-col items-center text-gray-600 relative">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span
+                        class="absolute -top-1 -right-2 bg-pink-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">5</span>
+                    <span class="text-xs mt-1">Cart</span>
+                </a>
+                <a href="My-Account.html" class="flex flex-col items-center text-gray-600">
+                    <i class="fas fa-user text-xl"></i>
+                    <span class="text-xs mt-1">Account</span>
+                </a>
+            </div>
+        </div>
+
+        <script>
+            // Color selection functionality
+            document.querySelectorAll('.color-option').forEach(color => {
+                color.addEventListener('click', function () {
+                    // Remove selected class from all colors
+                    document.querySelectorAll('.color-option').forEach(c => {
+                        c.classList.remove('selected');
+                    });
+
+                    // Add selected class to clicked color
+                    this.classList.add('selected');
+                });
+            });
+
+            // Size selection functionality
+            document.querySelectorAll('.flex-wrap button').forEach(size => {
+                size.addEventListener('click', function () {
+                    // Remove active class from all sizes
+                    document.querySelectorAll('.flex-wrap button').forEach(s => {
+                        s.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+                        s.classList.add('hover:bg-blue-100', 'hover:border-blue-500');
+                    });
+
+                    // Add active class to clicked size
+                    this.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+                    this.classList.remove('hover:bg-blue-100', 'hover:border-blue-500');
+                });
+            });
+
+            // Price range display
+            const priceRange = document.getElementById('priceRange');
+            const priceValues = document.querySelectorAll('.flex.justify-between.text-sm span');
+
+            priceRange.addEventListener('input', function () {
+                priceValues[1].textContent = `${this.value}`;
+            });
+
+            // Wishlist toggle
+            document.querySelectorAll('.relative button').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas', 'text-red-500');
+                    } else {
+                        icon.classList.remove('fas', 'text-red-500');
+                        icon.classList.add('far');
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            function toggleFilter(header) {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('i');
+
+                if (content.classList.contains('hidden')) {
+                    content.classList.remove('hidden');
+                    icon.classList.remove('rotate-180');
+                } else {
+                    content.classList.add('hidden');
+                    icon.classList.add('rotate-180');
+                }
+            }
+
+            function selectColor(el) {
+                document.querySelectorAll('.color-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                el.classList.add('selected');
+                console.log("Selected color:", el.dataset.color);
+            }
+
+        </script>
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+        <script src="assets/js1/Search.js"></script>
+
+    </body>
+
+</html>

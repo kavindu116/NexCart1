@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>NexCart Admin Panel</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    </head>
+    <body class="bg-gray-100 font-sans" onload="loadData();">
+
+        <!-- Header -->
+        <header class="bg-pink-600 text-white shadow">
+            <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+                <div class="flex items-center gap-3">
+                    <img src="images/NexCart12.png" alt="Logo" class="rounded-full">
+                    <h1 class="text-2xl font-bold">NexCart Admin Panel</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="font-medium">Welcome, Admin</span>
+                    <button class="bg-purple-500 px-3 py-1 rounded hover:bg-purple-600" onclick="SignOut();">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <div class="max-w-6xl mx-auto py-10">
+
+            <!-- Tab Navigation -->
+            <div class="border-b border-gray-300 mb-6">
+                <nav class="flex space-x-4" id="tabs">
+                    <button class="tab-btn px-4 py-2 bg-blue-600 text-white rounded-t" data-tab="categories">Categories</button>
+                    <button class="tab-btn px-4 py-2 bg-gray-200 rounded-t" data-tab="subcategories">Subcategories</button>
+                    <button class="tab-btn px-4 py-2 bg-gray-200 rounded-t" data-tab="brands">Brands</button>
+                    <button class="tab-btn px-4 py-2 bg-gray-200 rounded-t" data-tab="materials">Materials</button>
+                    <button class="tab-btn px-4 py-2 bg-gray-200 rounded-t" data-tab="colors">Colors</button>
+                    <button class="tab-btn px-4 py-2 bg-gray-200 rounded-t" data-tab="sizes">Sizes</button>
+                    <button class="tab-btn px-4 py-2 bg-gray-200 rounded-t" data-tab="orders">Orders & Reports</button>
+                </nav>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="tab-content">
+
+                <!-- Categories -->
+                <div class="tab-pane" id="categories">
+                    <h2 class="text-xl font-semibold mb-4">Manage Categories</h2>
+                    <form class="flex gap-2 mb-4">
+                        <input type="text" placeholder="New Category" class="border p-2 flex-1 rounded" id="category">
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" type="button" onclick="AddCategory();">Add</button>
+                    </form>
+                    <table class="w-full text-left border">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="p-2 border">Category</th>
+                                <th class="p-2 border">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            <tr>
+                                <td class="p-2 border">Men's Clothing</td>
+                                <td class="p-2 border">
+
+                                    <button class="text-red-600 hover:underline ml-2">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Subcategories -->
+                <div class="tab-pane hidden" id="subcategories">
+                    <h2 class="text-xl font-semibold mb-4">Manage Subcategories</h2>
+                    <form class="flex gap-2 mb-4">
+                        <input type="text" placeholder="New Subcategory" class="border p-2 flex-1 rounded" id="subCategory">
+                        <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="AddSubCategory();">Add</button>
+                    </form>
+                </div>
+
+                <!-- Brands -->
+                <div class="tab-pane hidden" id="brands">
+                    <h2 class="text-xl font-semibold mb-4">Manage Brands</h2>
+                    <form class="flex gap-2 mb-4">
+                        <input type="text" placeholder="New Brand" class="border p-2 flex-1 rounded" id="brand">
+                        <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="addBrand();">Add</button>
+                    </form>
+                </div>
+
+                <!-- Materials -->
+                <div class="tab-pane hidden" id="materials">
+                    <h2 class="text-xl font-semibold mb-4">Manage Materials</h2>
+                    <form class="flex gap-2 mb-4">
+                        <input type="text" placeholder="New Material" class="border p-2 flex-1 rounded" id="metirials">
+                        <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="addmetirial();">Add</button>
+                    </form>
+                </div>
+
+                <!-- Colors -->
+                <div class="tab-pane hidden" id="colors">
+                    <h2 class="text-xl font-semibold mb-4">Manage Colors</h2>
+                    <form class="flex gap-2 mb-4">
+                        <input type="text" placeholder="New Color" class="border p-2 flex-1 rounded" id="color">
+                        <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="addColor();">Add</button>
+                    </form>
+                </div>
+
+                <!-- Sizes -->
+                <div class="tab-pane hidden" id="sizes">
+                    <h2 class="text-xl font-semibold mb-4">Manage Sizes</h2>
+                    <form class="flex gap-2 mb-4">
+                        <input type="text" placeholder="New Size" class="border p-2 flex-1 rounded" id="size">
+                        <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onclick="addSize();">Add</button>
+                    </form>
+                </div>
+
+                <!-- Orders -->
+                <div class="tab-pane hidden" id="orders">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold">Orders & Reports</h2>
+                        <button onclick="printTable();" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Print / Export</button>
+                    </div>
+                    <table class="w-full text-left border" id="ordersTable">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="p-2 border">Order ID</th>
+                                <th class="p-2 border">Product</th>
+                                <th class="p-2 border">Status</th>
+                                <th class="p-2 border">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody1">
+                            <tr>
+                                <td class="p-2 border">#1023</td>
+                                <td class="p-2 border">John Doe</td>
+                                <td class="p-2 border">Pending</td>
+                                <td class="p-2 border">
+                                    <select class="border p-1 rounded" id="statusSelect">
+
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Change Status Button -->
+<!--                    <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                            onclick="openChangeStatusModal(123)">
+                        Change Status
+                    </button>-->
+
+                    <!-- Modal -->
+                    <div id="changeStatusModal" class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+                            <!-- Header -->
+                            <div class="flex justify-between items-center border-b pb-3">
+                                <h2 class="text-lg font-semibold text-gray-700">Change Order Status</h2>
+                                <button onclick="" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="mt-4">
+                                <input type="hidden" id="orderItemId">
+
+                                <label for="orderStatus" class="block text-sm font-medium text-gray-600 mb-1">Select Status</label>
+                                <select id="orderStatus" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                    <option value=""> Select</option>
+                                    
+                                </select>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="mt-6 flex justify-end space-x-3">
+                                <button onclick="closeChangeStatusModal()" 
+                                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                                    Cancel
+                                </button>
+                                <button onclick="updateOrderStatus()" 
+                                        class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white pt-12 pb-6">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                    <!-- Column 1 -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-shopping-bag mr-2"></i> NexCart
+                        </h3>
+                        <p class="text-gray-400 mb-4">Fashion for everyone at affordable prices. Quality products with fast
+                            delivery.</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-pinterest"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                            <li><a href="search.html" class="text-gray-400 hover:text-white">Shop</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Customer Service</h3>
+                        <ul class="space-y-2">
+                            <li><a href="My-Account.html" class="text-gray-400 hover:text-white">My Account</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Order Tracking</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Wishlist</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Shipping Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Returns & Refunds</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 4 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                        <ul class="space-y-2 text-gray-400">
+                            <li class="flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2"></i> 123 Fashion Street, kandy, NO 10001
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-phone-alt mr-2"></i> +1 234 567 890
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-envelope mr-2"></i> support@nexcart.com
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-clock mr-2"></i> Mon-Fri: 9AM - 6PM
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-800 pt-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 NexCart. All rights reserved.</p>
+                        <div class="flex space-x-6">
+                            <img src="https://1000logos.net/wp-content/uploads/2017/06/VISA-Logo-1992-768x432.png"
+                                 alt="Visa" class="h-6">
+                            <img src="https://th.bing.com/th/id/R.205013ad5e99aef05d6ca201a9ac3a31?rik=Z0cpX2RX%2bs5a9Q&riu=http%3a%2f%2fwww.pngall.com%2fwp-content%2fuploads%2f2016%2f07%2fMastercard-PNG.png&ehk=%2fudodjGiA%2fogzZwdrBgFCGA5rNzptgXW4WqBIIdvABg%3d&risl=&pid=ImgRaw&r=0"
+                                 alt="Mastercard" class="h-6">
+                            <img src="https://www.pngall.com/wp-content/uploads/5/PayPal-Logo-PNG-Free-Image.png"
+                                 alt="PayPal" class="h-6">
+                            <img src="https://logos-world.net/wp-content/uploads/2022/03/Apple-Pay-Logo.png" alt="Apple Pay"
+                                 class="h-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Mobile Bottom Navigation -->
+        <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50">
+            <div class="flex justify-around py-3">
+                <a href="index.html" class="flex flex-col items-center text-pink-600">
+                    <i class="fas fa-home text-xl"></i>
+                    <span class="text-xs mt-1">Home</span>
+                </a>
+                <a href="search.html" class="flex flex-col items-center text-gray-600">
+                    <i class="fas fa-search text-xl"></i>
+                    <span class="text-xs mt-1">Search</span>
+                </a>
+                <a href="Cart.html" class="flex flex-col items-center text-gray-600 relative">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span
+                        class="absolute -top-1 -right-2 bg-pink-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">5</span>
+                    <span class="text-xs mt-1">Cart</span>
+                </a>
+                <a href="My-Account.html" class="flex flex-col items-center text-gray-600">
+                    <i class="fas fa-user text-xl"></i>
+                    <span class="text-xs mt-1">Account</span>
+                </a>
+            </div>
+        </div>
+
+        <script src="assets/js1/Admin.js"></script>
+        <script>
+                const tabButtons = document.querySelectorAll(".tab-btn");
+                const tabPanes = document.querySelectorAll(".tab-pane");
+
+                tabButtons.forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        tabButtons.forEach(b => b.classList.remove("bg-blue-600", "text-white"));
+                        tabButtons.forEach(b => b.classList.add("bg-gray-200"));
+
+                        btn.classList.add("bg-blue-600", "text-white");
+                        btn.classList.remove("bg-gray-200");
+
+                        const tabId = btn.dataset.tab;
+                        tabPanes.forEach(pane => {
+                            pane.classList.toggle("hidden", pane.id !== tabId);
+                        });
+                    });
+                });
+        </script>
+
+        <script>
+            function printTable() {
+                const table = document.getElementById("ordersTable").outerHTML;
+                const newWin = window.open("");
+                newWin.document.write(`
+              <html>
+                  <head>
+                      <title>Orders Report</title>
+                      <style>
+                          table { border-collapse: collapse; width: 100%; }
+                          table, th, td { border: 1px solid black; padding: 8px; text-align: left; }
+                      </style>
+                  </head>
+                  <body>
+                      ${table}
+                  </body>
+              </html>
+          `);
+                newWin.document.close();
+                newWin.print();
+            }
+        </script>
+
+        <script src="assets/js1/SignOut.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+    </body>
+</html>
