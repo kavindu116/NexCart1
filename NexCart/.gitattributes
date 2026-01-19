@@ -5,4 +5,3 @@
 # Or use this to exclude them from language stats
 *.html linguist-documentation
 *.css linguist-documentation
-*.scss linguist-documentation
