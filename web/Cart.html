@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextCart - Your Shopping Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+         .search-box {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Animation for cart items */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .cart-item {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        
+        /* Pulse animation for buttons */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse:hover {
+            animation: pulse 1s infinite;
+        }
+    </style>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+</head>
+<body class="bg-gray-50 font-sans" onload="LoadCartItem();">
+    <!-- Top Bar -->
+        <div class="bg-gray-900 text-white py-2 px-4 text-sm hidden md:block">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex space-x-4">
+                    <span><i class="fas fa-phone-alt mr-1"></i> +1 234 567 890</span>
+                    <span><i class="fas fa-envelope mr-1"></i> support@nexcart.com</span>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-pink-400">Track Order</a>
+                    <a href="#" class="hover:text-pink-400">Help Center</a>
+                    <div class="relative group">
+                        <button class="hover:text-pink-400 flex items-center">
+                            <i class="fas fa-globe mr-1"></i> English
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div
+                            class="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded shadow-lg hidden group-hover:block z-50">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Español</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Français</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">中文</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <a href="#" class="text-2xl font-bold text-pink-600 flex items-center">
+                            <img src="images/NexCart12.png" alt="">
+                        </a>
+                    </div>
+
+<!--                     Search Bar 
+                    <div class="hidden md:flex flex-1 mx-8">
+                        <div class="relative w-full search-box rounded-full overflow-hidden">
+                            <input type="text" placeholder="Search for products..."
+                                   class="w-full py-3 px-5 focus:outline-none">
+                            <div class="absolute inset-y-0 right-0 flex items-center">
+                                <select
+                                    class="h-full px-4 text-gray-600 bg-gray-100 border-r border-gray-300 focus:outline-none">
+                                    <option>All Categories</option>
+                                    <option>Men's Fashion</option>
+                                    <option>Women's Fashion</option>
+                                    <option>Electronics</option>
+                                    <option>Home & Garden</option>
+                                </select>
+                                <button class="bg-pink-600 text-white px-6 h-full hover:bg-pink-700">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>-->
+
+                    <!-- Icons -->
+                    <div class="flex items-center space-x-6">
+                        <a href="#" class="text-gray-700 hover:text-pink-600 relative">
+                            <i class="fas fa-heart text-xl"></i>
+                           
+                        </a>
+                        <a href="Cart.html" class="text-gray-700 hover:text-pink-600 relative">
+                            <i class="fas fa-shopping-cart text-xl"></i>
+                            
+                        </a>
+                        <a href="My-Account.html" class="text-gray-700 hover:text-pink-600">
+                            <i class="fas fa-user text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Search -->
+        <div class="md:hidden bg-white py-2 px-4 shadow-sm">
+            <div class="relative">
+                <input type="text" placeholder="Search for products..."
+                       class="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:border-pink-500">
+                <button class="absolute right-3 top-2 text-gray-500">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="bg-white shadow-sm hidden md:block">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex space-x-8">
+                        <a href="index.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Home</a>
+                        <a href="search.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Shop</a>
+                        <div class="relative group">
+                            <a href="search.html"
+                               class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium flex items-center">
+                                Categories <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </a>
+                            <div
+                                class="absolute left-0 mt-0 w-48 bg-white text-gray-800 rounded shadow-lg hidden group-hover:block z-50">
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Men's
+                                    Fashion</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Women's
+                                    Fashion</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Kids &
+                                    Babies</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100">Accessories</a>
+                            </div>
+                        </div>
+                        <a href="#" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Deals</a>
+                        <a href="search.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">New Arrivals</a>
+                        <a href="#" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Add FeedBack Our Service</a>
+                    </div>
+                    <div>
+                        <a href="#" class="text-pink-600 font-medium">Today's Deals <span
+                                class="bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded ml-1">HOT</span></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden bg-white py-3 px-4 flex justify-between items-center shadow-sm">
+            <button class="text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <a href="#" class="text-pink-600 font-medium">Today's Deals</a>
+            <button class="text-gray-700">
+                <i class="fas fa-filter text-xl"></i>
+            </button>
+        </div>
+
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Cart Items Section -->
+            <div class="lg:w-2/3">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="bg-pink-600 text-white px-6 py-4">
+                        <h1 class="text-xl font-bold">Your Shopping Cart (3 Items)</h1>
+                    </div>
+                    
+                    <!-- Responsive Table -->
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="Card-Body">
+                               
+                                
+                               
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+                        <a href="search.html"><button class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                            <i class="fas fa-arrow-left mr-2"></i> Continue Shopping
+                        </button></a>
+                        <button class="text-gray-600 hover:text-gray-800 font-medium flex items-center" onclick="reload();">
+                            <i class="fas fa-sync-alt mr-2"></i> Update Cart
+                        </button>
+                    </div>
+                </div>
+                
+               
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="lg:w-1/3">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="bg-pink-600 text-white px-6 py-4">
+                        <h2 class="text-lg font-bold">Order Summary</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-gray-600">Quantities</span>
+                            <span class="font-medium" id="qty">1</span>
+                        </div>
+                       
+                      
+                        
+                      
+                        <div class="border-t border-gray-200 my-4"></div>
+                        <div class="flex justify-between mb-6">
+                            <span class="text-lg font-bold">Total</span>
+                            <span class="text-xl font-bold text-indigo-600" id="Total">$148.37</span>
+                        </div>
+                        <a href="checkout.html"><button class="w-full bg-pink-600 text-white py-3 px-4 rounded-md hover:bg-purple-800 transition duration-300 font-bold pulse flex items-center justify-center">
+                            <i class="fas fa-lock mr-2"></i> Proceed to Checkout
+                        </button></a>
+                    </div>
+                </div>
+                
+                <!-- Payment Methods -->
+                <div class="bg-white rounded-lg shadow-md mt-6 p-6">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">We Accept</h2>
+                    <div class="flex space-x-4">
+                        <div class="bg-gray-100 p-2 rounded-md">
+                            <i class="fab fa-cc-visa text-3xl text-blue-800"></i>
+                        </div>
+                        <div class="bg-gray-100 p-2 rounded-md">
+                            <i class="fab fa-cc-mastercard text-3xl text-red-700"></i>
+                        </div>
+                        <div class="bg-gray-100 p-2 rounded-md">
+                            <i class="fab fa-cc-amex text-3xl text-blue-600"></i>
+                        </div>
+                        <div class="bg-gray-100 p-2 rounded-md">
+                            <i class="fab fa-cc-paypal text-3xl text-blue-500"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Secure Checkout -->
+                <div class="bg-white rounded-lg shadow-md mt-6 p-6">
+                    <div class="flex items-center">
+                        <i class="fas fa-shield-alt text-green-500 text-2xl mr-3"></i>
+                        <div>
+                            <h3 class="font-medium text-gray-900">Secure Checkout</h3>
+                            <p class="text-sm text-gray-500">Your information is protected by 256-bit SSL encryption</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+     <!-- Footer -->
+        <footer class="bg-gray-900 text-white pt-12 pb-6">
+            <div class="container mx-auto px-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                    <!-- Column 1 -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-shopping-bag mr-2"></i> NexCart
+                        </h3>
+                        <p class="text-gray-400 mb-4">Fashion for everyone at affordable prices. Quality products with fast
+                            delivery.</p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="text-gray-400 hover:text-white">
+                                <i class="fab fa-pinterest"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                            <li><a href="search.html" class="text-gray-400 hover:text-white">Shop</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Customer Service</h3>
+                        <ul class="space-y-2">
+                            <li><a href="My-Account.html" class="text-gray-400 hover:text-white">My Account</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Order Tracking</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Wishlist</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Shipping Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white">Returns & Refunds</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 4 -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Contact Info</h3>
+                        <ul class="space-y-2 text-gray-400">
+                            <li class="flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2"></i> 123 Fashion Street, kandy, NO 10001
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-phone-alt mr-2"></i> +1 234 567 890
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-envelope mr-2"></i> support@nexcart.com
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-clock mr-2"></i> Mon-Fri: 9AM - 6PM
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-800 pt-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 NexCart. All rights reserved.</p>
+                        <div class="flex space-x-6">
+                            <img src="https://1000logos.net/wp-content/uploads/2017/06/VISA-Logo-1992-768x432.png"
+                                 alt="Visa" class="h-6">
+                            <img src="https://th.bing.com/th/id/R.205013ad5e99aef05d6ca201a9ac3a31?rik=Z0cpX2RX%2bs5a9Q&riu=http%3a%2f%2fwww.pngall.com%2fwp-content%2fuploads%2f2016%2f07%2fMastercard-PNG.png&ehk=%2fudodjGiA%2fogzZwdrBgFCGA5rNzptgXW4WqBIIdvABg%3d&risl=&pid=ImgRaw&r=0"
+                                 alt="Mastercard" class="h-6">
+                            <img src="https://www.pngall.com/wp-content/uploads/5/PayPal-Logo-PNG-Free-Image.png"
+                                 alt="PayPal" class="h-6">
+                            <img src="https://logos-world.net/wp-content/uploads/2022/03/Apple-Pay-Logo.png" alt="Apple Pay"
+                                 class="h-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Mobile Bottom Navigation -->
+        <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50">
+            <div class="flex justify-around py-3">
+                <a href="index.html" class="flex flex-col items-center text-pink-600">
+                    <i class="fas fa-home text-xl"></i>
+                    <span class="text-xs mt-1">Home</span>
+                </a>
+                <a href="search.html" class="flex flex-col items-center text-gray-600">
+                    <i class="fas fa-search text-xl"></i>
+                    <span class="text-xs mt-1">Search</span>
+                </a>
+                <a href="Cart.html" class="flex flex-col items-center text-gray-600 relative">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span
+                        class="absolute -top-1 -right-2 bg-pink-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">5</span>
+                    <span class="text-xs mt-1">Cart</span>
+                </a>
+                <a href="My-Account.html" class="flex flex-col items-center text-gray-600">
+                    <i class="fas fa-user text-xl"></i>
+                    <span class="text-xs mt-1">Account</span>
+                </a>
+            </div>
+        </div>
+
+    <script src="assets/js1/LoadCart.js"></script>
+    <script>
+        // Quantity buttons functionality
+        document.querySelectorAll('.quantity-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.getAttribute('data-action');
+                const input = this.parentElement.querySelector('input');
+                let value = parseInt(input.value);
+                
+                if (action === 'increase') {
+                    value += 1;
+                } else if (action === 'decrease' && value > 1) {
+                    value -= 1;
+                }
+                
+                input.value = value;
+                
+                // In a real app, you would update the cart total here
+                // For this demo, we'll just show a notification
+                if (action === 'increase') {
+                    showNotification('Quantity increased');
+                } else if (action === 'decrease' && value > 1) {
+                    showNotification('Quantity decreased');
+                }
+            });
+        });
+        
+        // Remove item functionality
+        document.querySelectorAll('.remove-item').forEach(button => {
+            button.addEventListener('click', function() {
+                const row = this.closest('tr');
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(50px)';
+                
+                setTimeout(() => {
+                    row.remove();
+                    showNotification('Item removed from cart');
+                    updateCartCount(-1);
+                }, 300);
+            });
+        });
+        
+        // Helper function to show notifications
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded-md shadow-lg animate-bounce';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+        
+        // Update cart count in header
+        function updateCartCount(change) {
+            const cartCount = document.querySelector('.fa-shopping-cart').nextElementSibling;
+            let count = parseInt(cartCount.textContent);
+            count += change;
+            cartCount.textContent = count;
+        }
+        
+        // Pulse animation for buttons on hover
+        document.querySelectorAll('.pulse').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.animation = 'pulse 1s infinite';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.animation = 'none';
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+</body>
+</html>

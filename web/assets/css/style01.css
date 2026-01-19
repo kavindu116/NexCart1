@@ -1,0 +1,95 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-image: url('https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb'); /* Full-page background */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.btn-signup1{
+    background-color: oklch(55.8% 0.288 302.321);
+    color: white;
+    border-radius: 30px;
+    font-weight: 500;
+}
+
+.full-page-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    backdrop-filter: blur(3px); /* Optional blur */
+}
+
+.signup-card {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #ffffffee;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.signup-header {
+    background-image: url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f'); /* Header image */
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.signup-header h2 {
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.form-control {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.btn-signup {
+    background-color: oklch(59.2% 0.249 0.584);
+    color: white;
+    border-radius: 30px;
+    font-weight: 500;
+}
+
+.form-links {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+}
+
+.form-links a {
+    text-decoration: none;
+    color: #888;
+}
+
+.form-links a:hover {
+    color: #000;
+}
+
+.btn-resend{
+    background-color: #6c82e63f;
+    color: white;
+    border-radius: 30px;
+    font-weight: 500;
+}
+
+@media (max-width: 576px) {
+    .signup-card {
+        margin: 10px;
+    }
+}

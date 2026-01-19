@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC 
+      "-//Hibernate/Hibernate Configuration DTD 3.0//EN" 
+      "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- Database connection settings -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/NexCart_1.1?useSSL=false</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">Kavindu@2003Lakshan</property>
+        <property name="hibernate.show_sql">true</property>
+        <mapping class = "Hibernate.User"/>
+        <mapping class = "Hibernate.City"/>
+        <mapping class = "Hibernate.Address"/>
+        <mapping class = "Hibernate.Size"/>
+        <mapping class = "Hibernate.Category"/>
+        <mapping class = "Hibernate.Metirial"/>
+        <mapping class = "model.Brand"/>
+       
+        <mapping class = "Hibernate.Status"/>
+        <mapping class = "Hibernate.Color"/>
+        <mapping class = "Hibernate.Product"/>
+        <mapping class = "Hibernate.Cart"/>
+        <mapping class = "Hibernate.DeliveryType"/>
+        <mapping class = "Hibernate.OrderStatus"/>
+        <mapping class = "Hibernate.Order"/>
+        <mapping class = "Hibernate.OrderItem"/>
+        <mapping class = "Hibernate.FeedBack"/>
+        <mapping class = "model.SubCategory"/>
+        
+        
+        
+
+       
+    </session-factory>
+</hibernate-configuration>
+

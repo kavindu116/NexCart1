@@ -1,0 +1,124 @@
+# Composer dependencies
+/vendor/
+composer.phar
+composer.lock
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.buildpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+nbproject/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Log files
+*.log
+logs/
+error_log
+php_errors.log
+
+# Cache and temporary files
+cache/
+temp/
+tmp/
+*.cache
+*.tmp
+
+# Uploaded files (adjust as needed)
+uploads/
+storage/
+
+# Build and dist folders
+build/
+dist/
+
+# Package files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Database files
+*.sql
+*.sqlite
+*.db
+
+# Configuration files (may contain sensitive data)
+config.php
+database.php
+# Uncomment if you want to ignore all config files
+# *config*.php
+
+# Framework specific
+
+# Laravel
+/bootstrap/compiled.php
+/app/storage/
+/public/storage
+/public/hot
+/storage/*.key
+/.vagrant
+Homestead.yaml
+Homestead.json
+npm-debug.log
+yarn-error.log
+
+# CodeIgniter
+*/config/development
+*/logs/log-*.php
+*/logs/!index.html
+*/cache/*
+*/cache/!index.html
+*/cache/!.htaccess
+
+# WordPress
+wp-config.php
+wp-content/uploads/
+wp-content/cache/
+wp-content/backup-db/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+sitemap.xml
+*.log
+
+# Drupal
+sites/*/files
+sites/*/private
+
+# Node modules (if using npm/yarn)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# PHPUnit
+/phpunit.xml
+.phpunit.result.cache
+
+# Coverage reports
+/coverage/
+clover.xml

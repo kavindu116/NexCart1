@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - NexCart</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/my-account.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <style>
+       :root {
+            --primary-color: oklch(59.2% 0.249 0.584) ;
+            --secondary-color: #f8f9fa;
+            --dark-color: #343a40;
+            --light-color: #ffffff;
+        }
+
+        .body {
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .sidebar {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+
+        .sidebar .nav-link {
+            color: var(--dark-color);
+            border-radius: 5px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: rgba(87, 240, 155, 0.1);
+            color: var(--primary-color);
+        }
+
+        .sidebar .nav-link.active {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: var(--light-color);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+        }
+
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-processing {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-shipped {
+            background-color: #cce5ff;
+            color: #425b75;
+        }
+
+        .status-delivered {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .product-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .badge-primary {
+            background-color: var(--primary-color);
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary-color), oklch(55.8% 0.288 302.321));
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+         .search-box {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body onload="loadData(); loadProduct();">
+    
+      <!-- Top Bar -->
+        <div class="bg-gray-900 text-white py-2 px-4 text-sm hidden md:block">
+            <div class="container mx-auto flex justify-between items-center">
+                <div class="flex space-x-4">
+                    <span><i class="fas fa-phone-alt mr-1"></i> +1 234 567 890</span>
+                    <span><i class="fas fa-envelope mr-1"></i> support@nexcart.com</span>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-pink-400">Track Order</a>
+                    <a href="#" class="hover:text-pink-400">Help Center</a>
+                    <div class="relative group">
+                        <button class="hover:text-pink-400 flex items-center">
+                            <i class="fas fa-globe mr-1"></i> English
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div
+                            class="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded shadow-lg hidden group-hover:block z-50">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Español</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">Français</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100">中文</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <a href="#" class="text-2xl font-bold text-pink-600 flex items-center">
+                            <img src="images/NexCart12.png" alt="">
+                        </a>
+                    </div>
+
+<!--                     Search Bar 
+                    <div class="hidden md:flex flex-1 mx-8">
+                        <div class="relative w-full search-box rounded-full overflow-hidden">
+                            <input type="text" placeholder="Search for products..."
+                                   class="w-full py-3 px-5 focus:outline-none">
+                            <div class="absolute inset-y-0 right-0 flex items-center">
+                                <select
+                                    class="h-full px-4 text-gray-600 bg-gray-100 border-r border-gray-300 focus:outline-none">
+                                    <option>All Categories</option>
+                                    <option>Men's Fashion</option>
+                                    <option>Women's Fashion</option>
+                                    <option>Electronics</option>
+                                    <option>Home & Garden</option>
+                                </select>
+                                <button class="bg-pink-600 text-white px-6 h-full hover:bg-pink-700">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>-->
+
+                    <!-- Icons -->
+                    <div class="flex items-center space-x-6">
+                        <a href="#" class="text-gray-700 hover:text-pink-600 relative">
+                            <i class="fas fa-heart text-xl"></i>
+                            
+                        </a>
+                        <a href="Cart.html" class="text-gray-700 hover:text-pink-600 relative">
+                            <i class="fas fa-shopping-cart text-xl"></i>
+                           
+                        </a>
+                        <a href="My-Account.html" class="text-gray-700 hover:text-pink-600">
+                            <i class="fas fa-user text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Search -->
+        <div class="md:hidden bg-white py-2 px-4 shadow-sm">
+            <div class="relative">
+                <input type="text" placeholder="Search for products..."
+                       class="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:border-pink-500">
+                <button class="absolute right-3 top-2 text-gray-500">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="bg-white shadow-sm hidden md:block">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex space-x-8">
+                        <a href="index.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Home</a>
+                        <a href="search.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Shop</a>
+                        <div class="relative group">
+                            <a href="search.html"
+                               class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium flex items-center">
+                                Categories <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </a>
+                            <div
+                                class="absolute left-0 mt-0 w-48 bg-white text-gray-800 rounded shadow-lg hidden group-hover:block z-50">
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Men's
+                                    Fashion</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Women's
+                                    Fashion</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100 border-b border-gray-100">Kids &
+                                    Babies</a>
+                                <a href="search.html" class="block px-4 py-2 hover:bg-gray-100">Accessories</a>
+                            </div>
+                        </div>
+                        <a href="#" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Deals</a>
+                        <a href="search.html" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">New Arrivals</a>
+                        <a href="#" class="nav-link py-4 text-gray-700 hover:text-pink-600 font-medium">Add FeedBack Our Service</a>
+                    </div>
+                    <div>
+                        <a href="#" class="text-pink-600 font-medium">Today's Deals <span
+                                class="bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded ml-1">HOT</span></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden bg-white py-3 px-4 flex justify-between items-center shadow-sm">
+            <button class="text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <a href="#" class="text-pink-600 font-medium">Today's Deals</a>
+            <button class="text-gray-700">
+                <i class="fas fa-filter text-xl"></i>
+            </button>
+        </div>
+
+
+    
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-3 mb-4">
+                <div class="sidebar p-3">
+                    <div class=" mb-4">
+                        <img src="https://img.icons8.com/?size=100&id=20750&format=png&color=000000" alt="Profile"
+                            class="profile-img mb-2">
+                        <h5 class="mb-1" id="uname">John Doe</h5>
+                        <p class="text-muted small" id="since">Member since 2022</p>
+                        <p class="text-muted small" id="email">enyoune@enyone.com</p>
+                    </div>
+
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#dashboard" data-bs-toggle="tab">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#profile" data-bs-toggle="tab">
+                                <i class="fas fa-user"></i> Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#orders" data-bs-toggle="tab">
+                                <i class="fas fa-shopping-bag"></i> My Orders
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#products" data-bs-toggle="tab">
+                                <i class="fas fa-tshirt"></i> My Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#sell" data-bs-toggle="tab">
+                                <i class="fas fa-plus-circle"></i> Sell Product
+                            </a>
+                        </li>
+                       
+                        <li class="nav-item mt-3">
+                            <a class="nav-link text-danger" href="#" onclick="SignOut();">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+
+                        <li class="nav-item mt-3">
+                            <a class="nav-link text-success" href="index.html">
+                                <i class=""></i><<< Back to Home
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="tab-content">
+                    <!-- Dashboard Tab -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <div class="welcome-banner">
+                            <h4 id="fname1"><i class="fas fa-heart me-2"></i> Welcome back, John!</h4>
+                            <p class="mb-0">Manage your account, orders, and products all in one place.</p>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-shopping-bag fa-3x mb-3 text-primary"></i>
+                                        <h5 id="OrderCount">5 Orders</h5>
+                                        <p class="text-muted">Total purchases</p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-tshirt fa-3x mb-3 text-primary"></i>
+                                        <h5 id="ProductCount">8 Products</h5>
+                                        <p class="text-muted">In your store</p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-dollar-sign fa-3x mb-3 text-primary"></i>
+                                        <h5>Rs:00.00</h5>
+                                        <p class="text-muted">Total earnings</p>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Recent Orders</h5>
+                                
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Date</th>
+                                                <th>Product</th>
+                                                   
+                                                <th>Items</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody">
+                                            <tr>
+                                                <td>#NC-2023-001</td>
+                                                <td>Jun 15, 2023</td>
+                                                <td>2</td>
+                                                <td>$89.99</td>
+                                                <td><span class="order-status status-delivered">Delivered</span></td>
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td>#NC-2023-002</td>
+                                                <td>Jun 10, 2023</td>
+                                                <td>1</td>
+                                                <td>$45.50</td>
+                                                <td><span class="order-status status-shipped">Shipped</span></td>
+                                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Tab -->
+                    <div class="tab-pane fade" id="profile">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Profile Information</h5>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">First Name</label>
+                                        <input type="text" class="form-control" value="" id="fname">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" value="" id="lname">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Address line 1</label>
+                                        <input type="text" class="form-control" value="" id="line1">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Address line 2</label>
+                                        <input type="text" class="form-control" value="" id="line2">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Postal Code</label>
+                                        <input type="text" class="form-control" value="" id="postalCode">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">City</label>
+                                        <select class="form-select" id="citySelect">
+                                            <option value="0">Select</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Change Password</h5>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label class="form-label">Current Password</label>
+                                        <input type="password" value="" class="form-control" id="password">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">New Password</label>
+                                        <input type="password" class="form-control" id="newPassword">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Confirm New Password</label>
+                                        <input type="password" class="form-control" id="confirmPassword">
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-primary" onclick="saveChanges();">Update Profile Details</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Orders Tab -->
+                    <div class="tab-pane fade" id="orders">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">My Orders</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Order ID</th>
+                                                <th>Date</th>
+                                                <th>Product</th>
+                                                <th>Items</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody1">
+                                            <tr>
+                                                <td>#NC-2023-001</td>
+                                                <td>Jun 15, 2023</td>
+                                                <td>2</td>
+                                                <td>$89.99</td>
+                                                <td><span class="order-status status-delivered">Delivered</span></td>
+                                               
+                                            </tr>
+                                            <tr>
+                                                <td>#NC-2023-002</td>
+                                                <td>Jun 10, 2023</td>
+                                                <td>pname</td>
+                                                <td>1</td>
+                                                <td>$45.50</td>
+                                                <td><span class="order-status status-shipped">Shipped</span></td>
+                                                <td>
+                                                    <a href="#" class="btn btn-sm btn-outline-primary">Track</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>#NC-2023-003</td>
+                                                <td>May 28, 2023</td>
+                                                <td>3</td>
+                                                <td>$120.75</td>
+                                                <td><span class="order-status status-processing">Processing</span></td>
+                                                <td>
+                                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products Tab -->
+                    <div class="tab-pane fade" id="products">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">My Products</h5>
+                                
+                            </div>
+                            <div class="card-body">
+                                <div class="row" id="myproductCard">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card h-100">
+                                            <div class="row g-0">
+                                                <div class="col-md-4">
+                                                    <img src="https://m.media-amazon.com/images/I/61-jBuhtgZL._AC_UY879_.jpg"
+                                                        class="img-fluid rounded-start h-100" alt="Product">
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Men's Casual Shirt</h5>
+                                                        <p class="card-text text-muted small">Category: Shirts</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="fw-bold">$29.99</span>
+                                                            <span class="badge bg-success">In Stock (15)</span>
+                                                        </div>
+                                                        <div class="mt-2 d-flex">
+                                                            <a href="#"
+                                                                class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                                                            <a href="#"
+                                                                class="btn btn-sm btn-outline-secondary">View</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card h-100">
+                                            <div class="row g-0">
+                                                <div class="col-md-4">
+                                                    <img src="https://m.media-amazon.com/images/I/71W5+hZbVLL._AC_UX569_.jpg"
+                                                        class="img-fluid rounded-start h-100" alt="Product">
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Women's Summer Dress</h5>
+                                                        <p class="card-text text-muted small">Category: Dresses</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="fw-bold">$39.99</span>
+                                                            <span class="badge bg-success">In Stock (8)</span>
+                                                        </div>
+                                                        <div class="mt-2 d-flex">
+                                                            <a href="#"
+                                                                class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                                                            <a href="#"
+                                                                class="btn btn-sm btn-outline-secondary">View</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card h-100">
+                                            <div class="row g-0">
+                                                <div class="col-md-4">
+                                                    <img src="https://m.media-amazon.com/images/I/61nzPMNY8zL._AC_UL1500_.jpg"
+                                                        class="img-fluid rounded-start h-100" alt="Product">
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Men's Jeans</h5>
+                                                        <p class="card-text text-muted small">Category: Pants</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="fw-bold">$34.99</span>
+                                                            <span class="badge bg-warning text-dark">Low Stock
+                                                                (3)</span>
+                                                        </div>
+                                                        <div class="mt-2 d-flex">
+                                                            <a href="#"
+                                                                class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                                                            <a href="#"
+                                                                class="btn btn-sm btn-outline-secondary">View</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card h-100">
+                                            <div class="row g-0">
+                                                <div class="col-md-4">
+                                                    <img src="https://m.media-amazon.com/images/I/71H4+2kD2EL._AC_UL1500_.jpg"
+                                                        class="img-fluid rounded-start h-100" alt="Product">
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Women's Blouse</h5>
+                                                        <p class="card-text text-muted small">Category: Tops</p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="fw-bold">$24.99</span>
+                                                            <span class="badge bg-danger">Out of Stock</span>
+                                                        </div>
+                                                        <div class="mt-2 d-flex">
+                                                            <a href="#"
+                                                                class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                                                            <a href="#"
+                                                                class="btn btn-sm btn-outline-secondary">View</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                     
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sell Product Tab -->
+                    <div class="tab-pane fade" id="sell">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Sell a Product</h5>
+                            </div>
+                            <div class="card-body">
+                                <form>
+                                    <div class="mb-3">
+                                        <label class="form-label">Product Name</label>
+                                        <input type="text" class="form-control" placeholder="Enter product name" id="productName">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Description</label>
+                                        <textarea class="form-control" rows="3"
+                                                  placeholder="Enter product description" id="discription"></textarea>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Category</label>
+                                            <select class="form-select" id="category">
+                                                <option value="0">Select category</option>
+                                               
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Subcategory</label>
+                                            <select class="form-select" id="subCategory">
+                                                <option value="0">Select subcategory</option>
+                                                
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Brand</label>
+                                            <select class="form-select" id="Brand">
+                                                <option value="0">Select Brand</option>
+                                               
+                                                
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label"> Metirial</label>
+                                            <select class="form-select" id="metirial">
+                                                <option value="0">Select Metirial</option>
+                                                
+                                                
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Price ($)</label>
+                                            <input type="number" class="form-control" placeholder="0.00" id="price">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Quantity</label>
+                                            <input type="number" class="form-control" placeholder="0" id="qty">
+                                        </div>
+                                    </div>
+                                    
+                                     <div class="row mb-3">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Sizes Available</label>
+                                            <select class="form-select" id="size">
+                                                <option value="0">Select Size</option>
+                                                
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Colors Available</label>
+                                            <select class="form-select" id="color">
+                                                <option value="0">Select Color</option>
+                                               
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        
+                                        
+                                    <div class="mb-3 row">
+                                        <label class="form-label">Product Images</label>
+                                        <div class="col-lg-4">
+                                            <label>Image 1</label>
+                                            <input class="form-control b2" type="file" accept="image/*" id="img1">
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <label>Image 2</label>
+                                            <input class="form-control b2" type="file" accept="image/*" id="img2">
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <label>Image 3</label>
+                                            <input class="form-control b2" type="file" accept="image/*" id="img3">
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                    
+                                    
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-primary col-12" onclick="saveProduct();">List Product</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+ <!-- Footer -->
+       
+
+    
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js1/SignOut.js"></script>
+    <script src="assets/js1/MyAccount.js"></script>
+    <script src="assets/js1/ProductRegistration.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script>
+        // Simple script to handle tab persistence
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all tab links
+            const tabLinks = document.querySelectorAll('.nav-link[data-bs-toggle="tab"]');
+
+            // Add click event listeners
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    const tabId = this.getAttribute('href');
+                    localStorage.setItem('lastTab', tabId);
+                });
+            });
+
+            // Check for last active tab
+            const lastTab = localStorage.getItem('lastTab');
+            if (lastTab) {
+                const tab = new bootstrap.Tab(document.querySelector(`a[href="${lastTab}"]`));
+                tab.show();
+            }
+        });
+    </script>
+</body>
+
+</html>
